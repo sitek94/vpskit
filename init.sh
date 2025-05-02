@@ -27,8 +27,16 @@ git clone https://github.com/sitek94/vpskit
 
 echo "Done - check /opt/vpskit for your scripts."
 
-# Optionally symlink /opt/vpskit to ~/vpskit for the current user if not already present
-if [ -d /opt/vpskit ] && [ ! -e "$HOME/vpskit" ]; then
-    ln -s /opt/vpskit "$HOME/vpskit"
-    echo "Symlinked /opt/vpskit to $HOME/vpskit"
+# Symlink /opt/vpskit to the invoking user's home, not root
+if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+    user_home=$(eval echo "~$SUDO_USER")
+
+    # Check if the symlink already exists
+    if [ -d /opt/vpskit ] && [ ! -e "$user_home/vpskit" ]; then
+        ln -s /opt/vpskit "$user_home/vpskit"
+        chown -h "$SUDO_USER":"$SUDO_USER" "$user_home/vpskit"
+        echo "Symlinked /opt/vpskit to $user_home/vpskit"
+    else
+        echo "Symlink already exists"
+    fi
 fi
