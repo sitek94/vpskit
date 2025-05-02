@@ -13,11 +13,17 @@ fi
 
 cd /opt/ || exit 1
 
-# Remove old vps-kit if exists
-if [ -d /opt/vps-kit ]; then
-    rm -rf /opt/vps-kit
+# Remove old vpskit if exists
+if [ -d /opt/vpskit ]; then
+    rm -rf /opt/vpskit
 fi
 
-git clone https://github.com/sitek94/vps-kit
+git clone https://github.com/sitek94/vpskit
 
-echo "Done - check /opt/vps-kit for your scripts."
+echo "Done - check /opt/vpskit for your scripts."
+
+# Optionally symlink /opt/vpskit to ~/vpskit for the current user if not already present
+if [ -d /opt/vpskit ] && [ ! -e "$HOME/vpskit" ]; then
+    ln -s /opt/vpskit "$HOME/vpskit"
+    echo "Symlinked /opt/vpskit to $HOME/vpskit"
+fi

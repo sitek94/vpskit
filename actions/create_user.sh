@@ -57,10 +57,10 @@ fi
 chmod 600 "$ssh_dir/authorized_keys"
 chown -R "$username:$username" "$ssh_dir"
 
-# Symlink `vps-kit` to `/opt/vps-kit`
-if [[ -d /opt/vps-kit && ! -e "/home/$username/vps-kit" ]]; then
-  ln -s /opt/vps-kit "/home/$username/vps-kit"
-  chown -h "$username:$username" "/home/$username/vps-kit"
+# Symlink `vpskit` to `/opt/vpskit`
+if [[ -d /opt/vpskit && ! -e "/home/$username/vpskit" ]]; then
+  ln -s /opt/vpskit "/home/$username/vpskit"
+  chown -h "$username:$username" "/home/$username/vpskit"
 fi
 
 echo "User $username successfully created with sudo and SSH access."

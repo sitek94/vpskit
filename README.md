@@ -7,6 +7,6 @@ Inspired by [unkn0w/noobs](https://github.com/unkn0w/noobs/tree/main)
 ## Installation
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/sitek94/vps-kit/main/init.sh | bash
+curl -sSL https://raw.githubusercontent.com/sitek94/vpskit/main/init.sh | bash
 ```
 
