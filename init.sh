@@ -1,6 +1,11 @@
 #!/bin/bash
 # Initialize the VPS Kit
 
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root (try: sudo $0)"
+    exit 1
+fi
+
 if ! command -v dpkg &> /dev/null; then
     echo "Are you sure this is Ubuntu/Debian?"
     exit 1
