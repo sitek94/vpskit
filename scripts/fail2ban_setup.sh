@@ -10,7 +10,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Prompt for SSH port with default 22
-read -p "Set SSH port (e.g. on Mikrus VPS it's 10332) [22]: " SSH_PORT
+read -p "Set SSH port [22]: " SSH_PORT
 SSH_PORT=${SSH_PORT:-22}
 
 # Install fail2ban
@@ -49,14 +49,12 @@ maxretry = 3
 mode = aggressive
 EOF
 
-# Create nginx-badbots filter if missing
-if [ ! -f /etc/fail2ban/filter.d/nginx-badbots.conf ]; then
+# Create nginx-badbots filter
 cat > /etc/fail2ban/filter.d/nginx-badbots.conf <<EOF
 [Definition]
 failregex = ^<HOST> -.*"(GET|POST|HEAD).*HTTP.*"(?:%(badbots)s)"$
 ignoreregex =
 EOF
-fi
 
 # Create nginx-attacks filter
 cat > /etc/fail2ban/filter.d/nginx-attacks.conf <<EOF
