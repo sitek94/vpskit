@@ -75,3 +75,11 @@ if [[ -d /opt/vpskit && ! -e "/home/$username/vpskit" ]]; then
 fi
 
 echo "🎉 User $username successfully created with sudo and SSH access"
+
+echo -e "\n\033[1;33m=============================="
+echo "🚨 NEW USER CREDENTIALS 🚨"
+echo "=============================="
+echo "👤 Username: $username"
+echo "🔑 Password: $password"
+echo "=============================="
+echo -e "👆 Remember to save the password in a secure location\033[0m\n"
