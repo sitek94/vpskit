@@ -4,12 +4,12 @@
 set -euo pipefail
 
 usage() {
-  echo "Usage: $0 <username> [source_user_for_keys]"
+  echo "🚨 Usage: $0 <username> [source_user_for_keys]"
   exit 1
 }
 
 if [[ $(id -u) -ne 0 ]]; then
-  echo "You must run this script as root (try: sudo $0 ...)" >&2
+  echo "🚨 You must run this script as root (try: sudo $0 ...)" >&2
   exit 1
 fi
 
@@ -21,7 +21,7 @@ if [[ -z "$username" ]]; then
 fi
 
 if id "$username" &>/dev/null; then
-  echo "User $username already exists!"
+  echo "🚨 User $username already exists!"
   exit 1
 fi
 
@@ -33,17 +33,25 @@ echo "Generated password for $username: $password"
 useradd -m -p "$(openssl passwd -1 "$password")" -s /bin/bash "$username"
 echo "User $username created."
 
-# Add to sudo group
+# Assign groups
+echo "Assigning groups..."
 usermod -aG sudo "$username"
+echo "sudo: ok"
 
-# Ensure sshusers group exists
 if ! getent group sshusers > /dev/null; then
   groupadd sshusers
 fi
-
-# Add user to sshusers group
 usermod -aG sshusers "$username"
+echo "sshusers: ok"
 
+if ! getent group docker > /dev/null; then
+  groupadd docker
+fi
+usermod -aG docker "$username"
+echo "docker: ok"
+
+# SSH
+echo "Configuring SSH..."
 ssh_dir="/home/$username/.ssh"
 mkdir -p "$ssh_dir"
 chmod 700 "$ssh_dir"
@@ -56,11 +64,14 @@ else
 fi
 chmod 600 "$ssh_dir/authorized_keys"
 chown -R "$username:$username" "$ssh_dir"
+echo "SSH: ok"
 
 # Symlink `vpskit` to `/opt/vpskit`
 if [[ -d /opt/vpskit && ! -e "/home/$username/vpskit" ]]; then
+  echo "Symlinking vpskit..."
   ln -s /opt/vpskit "/home/$username/vpskit"
   chown -h "$username:$username" "/home/$username/vpskit"
+  echo "vpskit: ok"
 fi
 
-echo "User $username successfully created with sudo and SSH access."
+echo "🎉 User $username successfully created with sudo and SSH access"
